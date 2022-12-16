@@ -8,6 +8,7 @@ import com.nttdata.bc39.grupo04.customer.persistence.CustomerEntity;
 import com.nttdata.bc39.grupo04.customer.persistence.CustomerRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -36,10 +37,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Cacheable(value = "customerCache")
     public Mono<CustomerDto> getCustomerById(String customerId) {
-        if (Objects.isNull(customerId)) {
-            throw new InvaliteInputException("Invalid customer with code: " + customerId);
-        }
         Mono<CustomerEntity> entityMono = repository.findByCode(customerId);
         if (Objects.isNull(entityMono.block())) {
             logger.debug("El cliente nro: " + customerId + ",no existe");
