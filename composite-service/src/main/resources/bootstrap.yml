@@ -19,7 +19,7 @@ eureka:
 app:
   account-service:
     host: localhost
-    port: 9092
+    port: 9098
   movements-service:
     host: localhost
     port: 9095
