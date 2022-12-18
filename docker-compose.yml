@@ -143,3 +143,10 @@ services:
       interval: 5s
       timeout: 2s
       retries: 60
+
+  redisdocker:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "6378:6379"

@@ -37,6 +37,11 @@ spring.autoconfigure.exclude: org.springframework.boot.autoconfigure.jdbc.DataSo
 spring.config.activate.on-profile: docker
 server.port: 8080
 spring:
+  cache:
+    type: redis
+  redis:
+    host: redisdocker
+    port: 6379
   cloud:
     config:
       enabled: true
