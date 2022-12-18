@@ -11,11 +11,10 @@ eureka:
   client:
     fetch-registry: true
     register-with-eureka: true
-  instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
     service-url:
       defaultZone: http://localhost:8761/eureka
-
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 #Mongo db
 spring.data.mongodb.database: product-db
 spring.data.mongodb.host: localhost
@@ -37,9 +36,9 @@ eureka:
   client:
     fetch-registry: 'true'
     register-with-eureka: 'true'
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-    service-url:
-      defaultZone: http://eureka-server:8080/eureka
 spring.data.mongodb.host: mongodocker
 spring.data.mongodb.uri: mongodb://mongodocker/product-db

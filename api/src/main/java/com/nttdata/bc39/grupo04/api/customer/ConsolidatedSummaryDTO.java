@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ConsolidatedSummaryDTO {
 	
-	private CustomerDto customer;
+	private CustomerDTO customer;
 	private List<CreditDTO> credits;
 	private List<AccountDTO> accounts;
 	

@@ -1,31 +1,10 @@
 package com.nttdata.bc39.grupo04.composite.service;
 
-import static com.nttdata.bc39.grupo04.api.utils.Constants.ACCOUNT_NUMBER_OF_ATM;
-import static com.nttdata.bc39.grupo04.api.utils.Constants.CODE_PRODUCT_CUENTA_CORRIENTE;
-import static com.nttdata.bc39.grupo04.api.utils.Constants.INITIAL_AMOUNT_OF_ATM;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nttdata.bc39.grupo04.api.account.AccountDTO;
-import com.nttdata.bc39.grupo04.api.account.AccountService;
-import com.nttdata.bc39.grupo04.api.account.DebitCardDTO;
-import com.nttdata.bc39.grupo04.api.account.DebitCardNumberDTO;
-import com.nttdata.bc39.grupo04.api.account.HolderDTO;
+import com.nttdata.bc39.grupo04.api.account.*;
 import com.nttdata.bc39.grupo04.api.credit.CreditDTO;
 import com.nttdata.bc39.grupo04.api.credit.CreditService;
-import com.nttdata.bc39.grupo04.api.customer.CustomerDto;
-import com.nttdata.bc39.grupo04.api.customer.CustomerService;
+import com.nttdata.bc39.grupo04.api.customer.CustomerDTO;
 import com.nttdata.bc39.grupo04.api.exceptions.BadRequestException;
 import com.nttdata.bc39.grupo04.api.exceptions.HttpErrorInfo;
 import com.nttdata.bc39.grupo04.api.exceptions.InvaliteInputException;
@@ -36,12 +15,25 @@ import com.nttdata.bc39.grupo04.api.movements.MovementsService;
 import com.nttdata.bc39.grupo04.api.product.ProductDTO;
 import com.nttdata.bc39.grupo04.api.product.ProductService;
 import com.nttdata.bc39.grupo04.api.resttemplate.RestTemplateImpl;
-
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+
+import static com.nttdata.bc39.grupo04.api.utils.Constants.*;
+
 @Component
-public class CompositeIntegration implements MovementsService, AccountService, CustomerService, ProductService, CreditService {
+public class CompositeIntegration implements MovementsService, AccountService,
+        ProductService, CreditService {
 
     private final RestTemplate restTemplate;
     private static final Logger logger = Logger.getLogger(CompositeIntegration.class);
@@ -131,7 +123,7 @@ public class CompositeIntegration implements MovementsService, AccountService, C
             throw handleHttpClientException(ex);
         }
     }
-    
+
     @Override
     public Mono<MovementsDTO> saveCreditMovement(MovementsDTO dto) {
         String url = urlMovementsService + "/credit";
@@ -146,7 +138,7 @@ public class CompositeIntegration implements MovementsService, AccountService, C
             throw handleHttpClientException(ex);
         }
     }
-    
+
     @Override
     public Mono<MovementsDTO> savePaymentCreditCardMovement(MovementsDTO dto) {
         String url = urlMovementsService + "/paymentCreditCard";
@@ -161,7 +153,7 @@ public class CompositeIntegration implements MovementsService, AccountService, C
             throw handleHttpClientException(ex);
         }
     }
-    
+
     @Override
     public Mono<MovementsDTO> saveChargeCreditCardMovement(MovementsDTO dto) {
         String url = urlMovementsService + "/chargeCreditCard";
@@ -309,11 +301,11 @@ public class CompositeIntegration implements MovementsService, AccountService, C
         return null;
     }
 
-    @Override
-    public Flux<CustomerDto> getAllCustomers() {
+
+    public Flux<CustomerDTO> getAllCustomers() {
         String url = urlCustomerService + "/all";
         try {
-            List<CustomerDto> list = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<CustomerDto>>() {
+            List<CustomerDTO> list = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<CustomerDTO>>() {
             }).getBody();
             if (Objects.isNull(list)) {
                 throw new BadRequestException("Error, no se pudo establecer conexión con  la url:" + url);
@@ -325,11 +317,10 @@ public class CompositeIntegration implements MovementsService, AccountService, C
         }
     }
 
-    @Override
-    public Mono<CustomerDto> getCustomerById(String customerId) {
+    public Mono<CustomerDTO> getCustomerById(String customerId) {
         String url = urlCustomerService + "/" + customerId;
         try {
-            CustomerDto dto = restTemplate.getForObject(url, CustomerDto.class);
+            CustomerDTO dto = restTemplate.getForObject(url, CustomerDTO.class);
             if (Objects.isNull(dto)) {
                 throw new BadRequestException("Error, no se pudo establecer conexión con  la url:" + url);
             }
@@ -340,16 +331,14 @@ public class CompositeIntegration implements MovementsService, AccountService, C
         }
     }
 
-    @Override
     public Mono<Void> deleteCustomerById(String customerId) {
         return null;
     }
 
-    @Override
-    public Mono<CustomerDto> createCustomer(CustomerDto customerDto) {
+    public Mono<CustomerDTO> createCustomer(CustomerDTO customerDto) {
         String url = urlCustomerService + "/save";
         try {
-            CustomerDto dto = restTemplate.postForObject(url, customerDto, CustomerDto.class);
+            CustomerDTO dto = restTemplate.postForObject(url, customerDto, CustomerDTO.class);
             if (Objects.isNull(dto)) {
                 throw new BadRequestException("Error, no se pudo establecer conexión con  la url:" + url);
             }
@@ -360,8 +349,7 @@ public class CompositeIntegration implements MovementsService, AccountService, C
         }
     }
 
-    @Override
-    public Mono<CustomerDto> updateCustomerById(String customerId, CustomerDto customerDto) {
+    public Mono<CustomerDTO> updateCustomerById(String customerId, CustomerDTO customerDto) {
         return null;
     }
 
@@ -581,8 +569,8 @@ public class CompositeIntegration implements MovementsService, AccountService, C
         }
     }
 
-	@Override
-	public Mono<CreditDTO> getCreditCardByNumber(String creditCardNumber) {
+    @Override
+    public Mono<CreditDTO> getCreditCardByNumber(String creditCardNumber) {
         String url = urlCreditService + "/getCreditCardByNumber/" + creditCardNumber;
         try {
             CreditDTO dto = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<CreditDTO>() {
@@ -596,5 +584,5 @@ public class CompositeIntegration implements MovementsService, AccountService, C
             logger.warn("Got exception while make CompositeIntegration::getByCreditNumber:  " + ex.getMessage());
             throw handleHttpClientException(ex);
         }
-	}
+    }
 }

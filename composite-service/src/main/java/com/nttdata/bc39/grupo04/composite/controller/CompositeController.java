@@ -9,7 +9,7 @@ import com.nttdata.bc39.grupo04.api.composite.*;
 import com.nttdata.bc39.grupo04.api.credit.CreditCardReportDTO;
 import com.nttdata.bc39.grupo04.api.credit.CreditDTO;
 import com.nttdata.bc39.grupo04.api.customer.ConsolidatedSummaryDTO;
-import com.nttdata.bc39.grupo04.api.customer.CustomerDto;
+import com.nttdata.bc39.grupo04.api.customer.CustomerDTO;
 import com.nttdata.bc39.grupo04.api.movements.MovementsReportDTO;
 import com.nttdata.bc39.grupo04.api.product.GeneralReportDTO;
 import com.nttdata.bc39.grupo04.api.product.ProductDTO;
@@ -103,13 +103,18 @@ public class CompositeController {
     }
 
     @GetMapping("/customer/all")
-    Flux<CustomerDto> getAllCustomer() {
+    Flux<CustomerDTO> getAllCustomer() {
         return service.getAllCustomers();
     }
 
     @PostMapping("/customer/save")
-    Mono<CustomerDto> createCustomer(@RequestBody CustomerDto customerDto) {
+    Mono<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDto) {
         return service.createCustomer(customerDto);
+    }
+
+    @GetMapping("/customer/{customerId}")
+    Mono<CustomerDTO> getCustomerById(@PathVariable("customerId") String customerId){
+        return service.getCustomerById(customerId);
     }
 
     @GetMapping("/availableAmountDailyAVG/{customerId}")

@@ -1,6 +1,6 @@
 package com.nttdata.bc39.grupo04.api.composite;
 
-import org.springframework.web.bind.annotation.PathVariable;
+import com.nttdata.bc39.grupo04.api.customer.CustomerDTO;
 
 import com.nttdata.bc39.grupo04.api.account.AccountDTO;
 import com.nttdata.bc39.grupo04.api.account.DebitCardDTO;
@@ -10,7 +10,6 @@ import com.nttdata.bc39.grupo04.api.account.DebitCardReportDTO;
 import com.nttdata.bc39.grupo04.api.credit.CreditCardReportDTO;
 import com.nttdata.bc39.grupo04.api.credit.CreditDTO;
 import com.nttdata.bc39.grupo04.api.customer.ConsolidatedSummaryDTO;
-import com.nttdata.bc39.grupo04.api.customer.CustomerDto;
 import com.nttdata.bc39.grupo04.api.movements.MovementsReportDTO;
 import com.nttdata.bc39.grupo04.api.product.GeneralReportDTO;
 import com.nttdata.bc39.grupo04.api.product.ProductDTO;
@@ -41,9 +40,11 @@ public interface CompositeService {
 
     Mono<AccountDTO> createAccount(AccountDTO dto);
 
-    Flux<CustomerDto> getAllCustomers();
+    Flux<CustomerDTO> getAllCustomers();
 
-    Mono<CustomerDto> createCustomer(CustomerDto customerDto);
+    Mono<CustomerDTO> createCustomer(CustomerDTO customerDto);
+
+    Mono<CustomerDTO> getCustomerById(String customerId);
 
     // Reports
     Flux<AvailableAmountDailyDTO> getAvailableAmountDaily(String customerId);

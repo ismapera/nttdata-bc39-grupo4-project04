@@ -1,6 +1,5 @@
 version: '2.1'
 services:
-
   config-server:
     build: config-server
     mem_limit: 512m
@@ -11,9 +10,14 @@ services:
 
   eureka-server:
     build: eureka-server
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://eureka-server:8761" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     mem_limit: 512m
     ports:
-      - "8761:8080"
+      - "8761:8761"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:

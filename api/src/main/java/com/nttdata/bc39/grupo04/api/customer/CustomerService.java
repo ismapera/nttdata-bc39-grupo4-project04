@@ -1,16 +1,15 @@
 package com.nttdata.bc39.grupo04.api.customer;
 
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import java.util.List;
 
 public interface CustomerService {
-    Flux<CustomerDto> getAllCustomers();
+    List<CustomerDTO> getAllCustomers();
 
-    Mono<CustomerDto> getCustomerById(String customerId);
+    CustomerDTO getCustomerById(String customerId);
 
-    Mono<Void> deleteCustomerById(String customerId);
+    void deleteCustomerById(String customerId);
 
-    Mono<CustomerDto> createCustomer(CustomerDto customerDto);
+    CustomerDTO createCustomer(CustomerDTO customerDto);
 
-    Mono<CustomerDto> updateCustomerById(String customerId, CustomerDto customerDto);
+    CustomerDTO updateCustomerById(String customerId, CustomerDTO customerDto);
 }

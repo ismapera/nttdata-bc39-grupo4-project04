@@ -11,3 +11,10 @@
 [2022-12-03 13:32:21] [ DEBUG] [CustomerServiceImpl:45] El cliente nro: 483529544,no existe
 [2022-12-04 10:19:09] [ DEBUG] [CustomerServiceImpl:45] El cliente nro: 48352933,no existe
 [2022-12-12 17:12:46] [ DEBUG] [CustomerServiceImpl:45] El cliente nro: 483529534,no existe
+[2022-12-17 15:03:37] [ DEBUG] [CustomerServiceImpl:99] Error, el cliente nro: 48352954, ya esta registrado
+[2022-12-17 16:51:11] [ DEBUG] [CustomerServiceImpl:102] Error, el cliente nro: 08603346, ya esta registrado
+[2022-12-17 19:55:32] [ DEBUG] [CustomerServiceImpl:99] Error, el cliente nro: 08603346, ya esta registrado
+[2022-12-17 21:30:28] [ DEBUG] [CustomerServiceImpl:44] El cliente nro: 08603346,no existe
+[2022-12-17 21:30:45] [ DEBUG] [CustomerServiceImpl:97] Error, el cliente nro: 08603346, ya esta registrado
+[2022-12-17 21:38:40] [ DEBUG] [CustomerServiceImpl:97] Error, el cliente nro: 48352954, ya esta registrado
+[2022-12-17 21:39:46] [ DEBUG] [CustomerServiceImpl:97] Error, el cliente nro: 48352954, ya esta registrado
