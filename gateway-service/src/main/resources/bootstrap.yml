@@ -19,37 +19,37 @@ spring:
           uri: lb://CUSTOMER-SERVICE/
           filters: StripPrefix=1
           predicates:
-            - Path=/customer-service/**
+            - Path=/customer-gateway/**
 
         - id: ACCOUNT-SERVICE
           uri: lb://ACCOUNT-SERVICE/
           filters: StripPrefix=1
           predicates:
-            - Path=/account-service/**
+            - Path=/account-gateway/**
 
         - id: MOVEMENTS-SERVICE
           uri: lb://MOVEMENTS-SERVICE/
           filters: StripPrefix=1
           predicates:
-            - Path=/movements-service/**
+            - Path=/movements-gateway/**
 
         - id: COMPOSITE-SERVICE
           uri: lb://COMPOSITE-SERVICE/
           filters: StripPrefix=1
           predicates:
-            - Path=/composite-gateway/**
+            - Path=/gateway/**
 
-        - id:   CREDIT-SERVICE
+        - id: CREDIT-SERVICE
           uri: lb://CREDIT-SERVICE/
           filters: StripPrefix=1
           predicates:
-            - Path=/credit-service/**
+            - Path=/credit-gateway/**
             
-        - id:   PRODUCT-SERVICE
+        - id: PRODUCT-SERVICE
           uri: lb://PRODUCT-SERVICE/
           filters: StripPrefix=1
           predicates:
-            - Path=/product-service/**
+            - Path=/product-gateway/**
 
 #Eureka
 eureka:
