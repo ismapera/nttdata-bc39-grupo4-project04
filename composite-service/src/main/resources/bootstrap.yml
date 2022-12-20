@@ -32,6 +32,9 @@ app:
   product-service:
     host: localhost
     port: 9093
+  wallet-service:
+    host: localhost
+    port: 9090
 ---
 spring.config.activate.on-profile: docker
 server.port: 8080
@@ -66,4 +69,7 @@ app:
     port: 8080
   product-service:
     host: product-service
+    port: 8080
+  wallet-service:
+    host: wallet-service
     port: 8080

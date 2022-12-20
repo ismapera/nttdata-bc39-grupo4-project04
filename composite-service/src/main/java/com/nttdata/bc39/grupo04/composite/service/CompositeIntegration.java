@@ -15,6 +15,9 @@ import com.nttdata.bc39.grupo04.api.movements.MovementsService;
 import com.nttdata.bc39.grupo04.api.product.ProductDTO;
 import com.nttdata.bc39.grupo04.api.product.ProductService;
 import com.nttdata.bc39.grupo04.api.resttemplate.RestTemplateImpl;
+import com.nttdata.bc39.grupo04.api.wallet.WalletDTO;
+import com.nttdata.bc39.grupo04.api.wallet.WalletService;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -33,7 +36,7 @@ import static com.nttdata.bc39.grupo04.api.utils.Constants.*;
 
 @Component
 public class CompositeIntegration implements MovementsService, AccountService,
-        ProductService, CreditService {
+        ProductService, CreditService, WalletService {
 
     private final RestTemplate restTemplate;
     private static final Logger logger = Logger.getLogger(CompositeIntegration.class);
@@ -43,9 +46,10 @@ public class CompositeIntegration implements MovementsService, AccountService,
     private final String urlCreditService;
 
     private final String urlProductService;
+    private final String urlWalletService;
     private final ObjectMapper mapper;
 
-    public CompositeIntegration(RestTemplate restTemplate, ObjectMapper mapper, @Value("${app.movements-service.host}") String movementsServiceHost, @Value("${app.movements-service.port}") String movementsServicePort, @Value("${app.account-service.host}") String accountServiceHost, @Value("${app.account-service.port}") String accountServicePort, @Value("${app.customer-service.host}") String customerServiceHost, @Value("${app.customer-service.port}") String customerServicePort, @Value("${app.credit-service.host}") String creditServiceHost, @Value("${app.credit-service.port}") String creditServicePort, @Value("${app.product-service.host}") String productServiceHost, @Value("${app.product-service.port}") String productServicePort) {
+    public CompositeIntegration(RestTemplate restTemplate, ObjectMapper mapper, @Value("${app.movements-service.host}") String movementsServiceHost, @Value("${app.movements-service.port}") String movementsServicePort, @Value("${app.account-service.host}") String accountServiceHost, @Value("${app.account-service.port}") String accountServicePort, @Value("${app.customer-service.host}") String customerServiceHost, @Value("${app.customer-service.port}") String customerServicePort, @Value("${app.credit-service.host}") String creditServiceHost, @Value("${app.credit-service.port}") String creditServicePort, @Value("${app.product-service.host}") String productServiceHost, @Value("${app.product-service.port}") String productServicePort, @Value("${app.wallet-service.host}") String walletServiceHost, @Value("${app.wallet-service.port}") String walletServicePort) {
         this.restTemplate = restTemplate;
         this.mapper = mapper;
         this.urlAccountService = String.format("http://%s:%s/%s", accountServiceHost, accountServicePort, "account");
@@ -53,12 +57,14 @@ public class CompositeIntegration implements MovementsService, AccountService,
         this.urlCustomerService = String.format("http://%s:%s/%s", customerServiceHost, customerServicePort, "customer");
         this.urlCreditService = String.format("http://%s:%s/%s", creditServiceHost, creditServicePort, "credit");
         this.urlProductService = String.format("http://%s:%s/%s", productServiceHost, productServicePort, "product");
+        this.urlWalletService = String.format("http://%s:%s/%s", walletServiceHost, walletServicePort, "wallet");
 
         logger.debug("urlAccountService ====> " + urlAccountService);
         logger.debug("urlMovementsService ====> " + urlMovementsService);
         logger.debug("urlCustomerService ====> " + urlCustomerService);
         logger.debug("urlCreditService ====> " + urlCreditService);
         logger.debug("urlProductService ====> " + urlProductService);
+        logger.debug("urlWalletService ====> " + urlWalletService);
     }
 
     // Movements
@@ -582,6 +588,99 @@ public class CompositeIntegration implements MovementsService, AccountService,
             return Mono.just(dto);
         } catch (HttpClientErrorException ex) {
             logger.warn("Got exception while make CompositeIntegration::getByCreditNumber:  " + ex.getMessage());
+            throw handleHttpClientException(ex);
+        }
+    }
+    
+    //Wallet-Service
+    
+    @Override
+    public Mono<WalletDTO> getWalletByPhoneNumber(String phoneNumber) {
+        String url = urlWalletService + "/findByPhoneNumber/" + phoneNumber;
+        try {
+            WalletDTO dto = restTemplate.getForObject(url, WalletDTO.class);
+            if (Objects.isNull(dto)) {
+                throw new BadRequestException("Error, no se pudo establecer conexión con  la url:" + url);
+            }
+            return Mono.just(dto);
+        } catch (HttpClientErrorException ex) {
+            logger.warn("Got exception while CompositeIntegration::getWalletByPhoneNumber: " + ex.getMessage());
+            throw handleHttpClientException(ex);
+        }
+    }
+
+	@Override
+	public Flux<WalletDTO> getAllWallets() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Mono<WalletDTO> createWallet(WalletDTO dto) {
+        String url = urlWalletService + "/save";
+        try {
+        	WalletDTO walletDTO = restTemplate.postForObject(url, dto, WalletDTO.class);
+            if (Objects.isNull(walletDTO)) {
+                throw new BadRequestException("Error, no se pudo establecer conexión con  la url:" + url);
+            }
+            return Mono.just(walletDTO);
+        } catch (HttpClientErrorException ex) {
+            logger.warn("Got exception while CompositeIntegration::createWallet: " + ex.getMessage());
+            throw handleHttpClientException(ex);
+        }
+	}
+
+	@Override
+	public Mono<WalletDTO> updateWallet(WalletDTO dto) {
+		return null;
+	}
+
+	@Override
+	public Mono<Void> deleteWalletByPhoneNumber(String phoneNumber) {
+		return null;
+	}
+	
+    @Override
+    public Mono<WalletDTO> makeDepositWallet(double amount, String numberPhone) {
+        String url = urlWalletService + "/deposit/" + numberPhone + "?amount=" + amount;
+        try {
+        	WalletDTO dto = restTemplate.getForObject(url, WalletDTO.class);
+            if (Objects.isNull(dto)) {
+                throw new BadRequestException("Error, no se pudo establecer conexión con  la url:" + url);
+            }
+            return Mono.just(dto);
+        } catch (HttpClientErrorException ex) {
+            logger.warn("Got exception while CompositeIntegration::makeDepositWallet: " + ex.getMessage());
+            throw handleHttpClientException(ex);
+        }
+    }
+
+	@Override
+	public Mono<WalletDTO> makeWithdrawalWallet(double amount, String numberPhone) {
+        String url = urlWalletService + "/withdrawal/" + numberPhone + "?amount=" + amount;
+        try {
+        	WalletDTO dto = restTemplate.getForObject(url, WalletDTO.class);
+            if (Objects.isNull(dto)) {
+                throw new BadRequestException("Error, no se pudo establecer conexión con  la url:" + url);
+            }
+            return Mono.just(dto);
+        } catch (HttpClientErrorException ex) {
+            logger.warn("Got exception while CompositeIntegration::makeWithdrawalWallet: " + ex.getMessage());
+            throw handleHttpClientException(ex);
+        }
+	}
+	
+    @Override
+    public Mono<WalletDTO> getWalletByDebitCardNumber(String debitCardNumber) {
+        String url = urlWalletService + "/findByDebitCardNumber/" + debitCardNumber;
+        try {
+            WalletDTO dto = restTemplate.getForObject(url, WalletDTO.class);
+            if (Objects.isNull(dto)) {
+            	dto = new WalletDTO();
+            }
+            return Mono.just(dto);
+        } catch (HttpClientErrorException ex) {
+            logger.warn("Got exception while CompositeIntegration::getWalletByPhoneNumber: " + ex.getMessage());
             throw handleHttpClientException(ex);
         }
     }

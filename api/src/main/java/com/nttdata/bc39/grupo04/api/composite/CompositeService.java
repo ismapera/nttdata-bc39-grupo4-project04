@@ -13,6 +13,7 @@ import com.nttdata.bc39.grupo04.api.customer.ConsolidatedSummaryDTO;
 import com.nttdata.bc39.grupo04.api.movements.MovementsReportDTO;
 import com.nttdata.bc39.grupo04.api.product.GeneralReportDTO;
 import com.nttdata.bc39.grupo04.api.product.ProductDTO;
+import com.nttdata.bc39.grupo04.api.wallet.WalletDTO;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -87,4 +88,12 @@ public interface CompositeService {
     Mono<ProductDTO> updateProduct(ProductDTO dto);
 
     Mono<Void> deleteProductByCode(String code);
+    
+    
+    // Wallet
+    Mono<WalletDTO> getWalletByPhoneNumber(String phoneNumber);
+    
+    Mono<WalletDTO> createWallet(WalletDTO dto);
+    
+    Mono<TransactionAtmDTO> makePaymentWallet(TransactionTransferWalletDTO body);
 }
