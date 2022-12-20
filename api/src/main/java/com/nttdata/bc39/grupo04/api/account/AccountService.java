@@ -1,5 +1,6 @@
 package com.nttdata.bc39.grupo04.api.account;
 
+import com.nttdata.bc39.grupo04.api.wallet.WalletAssociatedDTO;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -18,9 +19,11 @@ public interface AccountService {
     Mono<Void> deleteAccount(String accountNumber);
 
     Mono<DebitCardDTO> createDebitCard(DebitCardDTO debitCardDTO);
+
     Mono<DebitCardNumberDTO> generateNumberDebitCard();
 
     Flux<AccountDTO> getAllAccountByDebitCardNumber(String debitCardNumber);
 
+    void associateDebitCardWithWallet(WalletAssociatedDTO walletAssociatedDTO);
 
 }

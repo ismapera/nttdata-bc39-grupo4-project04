@@ -1,5 +1,6 @@
 package com.nttdata.bc39.grupo04.composite.service;
 
+import static com.nttdata.bc39.grupo04.api.kafka.EventType.ASSOCIATED_WITH_WALLET;
 import static com.nttdata.bc39.grupo04.api.utils.Constants.ACCOUNT_NUMBER_OF_ATM;
 import static com.nttdata.bc39.grupo04.api.utils.Constants.CODE_PRODUCT_EMPRESA_PYME_CORRIENTE;
 import static com.nttdata.bc39.grupo04.api.utils.Constants.CODE_PRODUCT_PERSONAL_VIP_AHORRO;
@@ -48,6 +49,7 @@ import com.nttdata.bc39.grupo04.api.customer.CustomerDTO;
 import com.nttdata.bc39.grupo04.api.exceptions.BadRequestException;
 import com.nttdata.bc39.grupo04.api.exceptions.InvaliteInputException;
 import com.nttdata.bc39.grupo04.api.exceptions.NotFoundException;
+import com.nttdata.bc39.grupo04.api.kafka.Event;
 import com.nttdata.bc39.grupo04.api.movements.MovementsDTO;
 import com.nttdata.bc39.grupo04.api.movements.MovementsReportDTO;
 import com.nttdata.bc39.grupo04.api.product.GeneralReportDTO;
@@ -55,30 +57,39 @@ import com.nttdata.bc39.grupo04.api.product.ProductDTO;
 import com.nttdata.bc39.grupo04.api.utils.CodesEnum;
 import com.nttdata.bc39.grupo04.api.utils.Constants;
 import com.nttdata.bc39.grupo04.api.utils.DateUtils;
+import com.nttdata.bc39.grupo04.api.wallet.WalletAssociatedDTO;
 import com.nttdata.bc39.grupo04.api.wallet.WalletDTO;
 
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
+import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import static com.nttdata.bc39.grupo04.api.utils.Constants.*;
-
 @Service
+@RequiredArgsConstructor
 public class CompositeServiceImpl implements CompositeService {
 
 	private final CompositeIntegration integration;
-	private final Logger logger = Logger.getLogger(CompositeServiceImpl.class);
+	private final CompositeEventService eventService;
+	private static final Logger logger = Logger.getLogger(CompositeServiceImpl.class);
 
-	@Autowired
-	public CompositeServiceImpl(CompositeIntegration integration) {
-		this.integration = integration;
+	@Override
+	public void associatedWithDebitCard(WalletAssociatedDTO body) {
+		if (Objects.isNull(body)) {
+			throw new InvaliteInputException("Error, el cuerpo de solicitud es invalido");
+		}
+		if (Objects.isNull(body.getDebitCardNumber())) {
+			throw new InvaliteInputException("Error, numero de tarjeta de debito invalida");
+		}
+		if (Objects.isNull(body.getPhoneNumber())) {
+			throw new InvaliteInputException("Error, numero de telefono  invalido");
+		}
+		if (Objects.isNull(body.getCustomerId())) {
+			throw new InvaliteInputException("Error, codigo de cliente invalido");
+		}
+		Event<WalletAssociatedDTO> event = new Event<>(body, ASSOCIATED_WITH_WALLET,
+				"Enviado datos para asociarla con la tarjeta de debito.");
+		logger.debug("publicKafkaMessage ====>" + event);
+		eventService.publish(event);
 	}
 
 	@Override
@@ -154,8 +165,8 @@ public class CompositeServiceImpl implements CompositeService {
 			double amount, CodesEnum codesEnum) {
 		Mono<AccountDTO> sourceMono = integration.getByAccountNumber(sourceAccountNumber);
 		Mono<AccountDTO> destinationMono = integration.getByAccountNumber(destinationAccountNumber);
-        String productIdSource = Objects.requireNonNull(sourceMono.block()).getProductId();
-        String productIdDestination = Objects.requireNonNull(destinationMono.block()).getProductId();
+		String productIdSource = Objects.requireNonNull(sourceMono.block()).getProductId();
+		String productIdDestination = Objects.requireNonNull(destinationMono.block()).getProductId();
 		logger.debug("productIdSource => " + productIdSource);
 		logger.debug("productIdDestination => " + productIdDestination);
 		validationLimitAmount(sourceAccountNumber, destinationAccountNumber, codesEnum, amount);

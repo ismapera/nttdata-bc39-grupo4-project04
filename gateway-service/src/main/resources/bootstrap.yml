@@ -50,6 +50,12 @@ spring:
           filters: StripPrefix=1
           predicates:
             - Path=/product-gateway/**
+            
+        - id: WALLET-SERVICE
+          uri: lb://WALLET-SERVICE/
+          filters: StripPrefix=1
+          predicates:
+            - Path=/wallet-gateway/**
 
 #Eureka
 eureka:

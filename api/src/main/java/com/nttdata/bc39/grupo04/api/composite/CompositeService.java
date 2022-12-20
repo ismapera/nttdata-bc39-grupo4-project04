@@ -1,7 +1,5 @@
 package com.nttdata.bc39.grupo04.api.composite;
 
-import com.nttdata.bc39.grupo04.api.customer.CustomerDTO;
-
 import com.nttdata.bc39.grupo04.api.account.AccountDTO;
 import com.nttdata.bc39.grupo04.api.account.DebitCardDTO;
 import com.nttdata.bc39.grupo04.api.account.DebitCardNumberDTO;
@@ -10,90 +8,95 @@ import com.nttdata.bc39.grupo04.api.account.DebitCardReportDTO;
 import com.nttdata.bc39.grupo04.api.credit.CreditCardReportDTO;
 import com.nttdata.bc39.grupo04.api.credit.CreditDTO;
 import com.nttdata.bc39.grupo04.api.customer.ConsolidatedSummaryDTO;
+import com.nttdata.bc39.grupo04.api.customer.CustomerDTO;
 import com.nttdata.bc39.grupo04.api.movements.MovementsReportDTO;
 import com.nttdata.bc39.grupo04.api.product.GeneralReportDTO;
 import com.nttdata.bc39.grupo04.api.product.ProductDTO;
+import com.nttdata.bc39.grupo04.api.wallet.WalletAssociatedDTO;
 import com.nttdata.bc39.grupo04.api.wallet.WalletDTO;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface CompositeService {
-    Mono<TransactionAtmDTO> makeDepositATM(String destinationAccountNumber, double amount);
+	Mono<TransactionAtmDTO> makeDepositATM(String destinationAccountNumber, double amount);
 
-    Mono<TransactionAtmDTO> makeWithdrawnATM(String destinationAccountNumber, double amount);
+	Mono<TransactionAtmDTO> makeWithdrawnATM(String destinationAccountNumber, double amount);
 
-    Mono<TransactionAtmDTO> makeTransferAccount(TransactionTransferDTO body);
+	Mono<TransactionAtmDTO> makeTransferAccount(TransactionTransferDTO body);
 
-    Flux<MovementsReportDTO> getAllMovementsByAccount(String account);
+	Flux<MovementsReportDTO> getAllMovementsByAccount(String account);
 
-    Flux<AccountDTO> getAccountAllByCustomer(String customerId);
+	Flux<AccountDTO> getAccountAllByCustomer(String customerId);
 
-    Mono<DebitCardDTO> createDebitCard(DebitCardDTO debitCardDTO);
+	Mono<DebitCardDTO> createDebitCard(DebitCardDTO debitCardDTO);
 
-    Mono<DebitCardPaymentDTO> paymentWithDebitCard(DebitCardPaymentDTO debitCardPaymnetDTO);
+	Mono<DebitCardPaymentDTO> paymentWithDebitCard(DebitCardPaymentDTO debitCardPaymnetDTO);
 
-    Mono<AccountDTO> getMainAccountByDebitCardNumber(String debitCardNumber);
+	Mono<AccountDTO> getMainAccountByDebitCardNumber(String debitCardNumber);
 
-    Mono<DebitCardNumberDTO> generateNumberDebitCard();
+	Mono<DebitCardNumberDTO> generateNumberDebitCard();
 
-    Mono<AccountDTO> getAccountByNumber(String accountNumber);
+	Mono<AccountDTO> getAccountByNumber(String accountNumber);
 
-    Mono<AccountDTO> createAccount(AccountDTO dto);
+	Mono<AccountDTO> createAccount(AccountDTO dto);
 
-    Flux<CustomerDTO> getAllCustomers();
+	Flux<CustomerDTO> getAllCustomers();
 
-    Mono<CustomerDTO> createCustomer(CustomerDTO customerDto);
+	Mono<CustomerDTO> createCustomer(CustomerDTO customerDto);
 
-    Mono<CustomerDTO> getCustomerById(String customerId);
+	Mono<CustomerDTO> getCustomerById(String customerId);
 
-    // Reports
-    Flux<AvailableAmountDailyDTO> getAvailableAmountDaily(String customerId);
+	// Reports
+	Flux<AvailableAmountDailyDTO> getAvailableAmountDaily(String customerId);
 
-    Flux<ComissionReportDTO> getAllComissionByProduct(String fechStart, String fechEnd);
-    
-    Mono<DebitCardReportDTO> getLastTenDebitCardMovements(String debitCardNumber);
-    
+	Flux<ComissionReportDTO> getAllComissionByProduct(String fechStart, String fechEnd);
+
+	Mono<DebitCardReportDTO> getLastTenDebitCardMovements(String debitCardNumber);
+
 	Mono<CreditCardReportDTO> getLastTenCreditCardMovements(String debitCardNumber);
-	
+
 	Mono<ConsolidatedSummaryDTO> getConsolidatedSummary(String customerId);
-	
-    Mono<GeneralReportDTO> getReportGeneral(String fechStart, String fechEnd, String productId);
 
-    // Credit
+	Mono<GeneralReportDTO> getReportGeneral(String fechStart, String fechEnd, String productId);
 
-    Mono<CreditDTO> createCredit(CreditDTO dto);
+	// Credit
 
-    Mono<CreditDTO> getByCreditNumber(String creditNumber);
+	Mono<CreditDTO> createCredit(CreditDTO dto);
 
-    Flux<CreditDTO> getAllCreditByCustomer(String customerId);
+	Mono<CreditDTO> getByCreditNumber(String creditNumber);
 
-    Mono<CreditDTO> makePaymentCredit(double amount, String creditNumber, String payingCustomerId);
+	Flux<CreditDTO> getAllCreditByCustomer(String customerId);
 
-    Mono<CreditDTO> makePaymentCreditCard(double amount, String creditCardNumber);
+	Mono<CreditDTO> makePaymentCredit(double amount, String creditNumber, String payingCustomerId);
 
-    Mono<CreditDTO> makeChargeCredit(double amount, String creditCardNumber);
+	Mono<CreditDTO> makePaymentCreditCard(double amount, String creditCardNumber);
 
-    Mono<Void> deleteCredit(String creditNumber);
+	Mono<CreditDTO> makeChargeCredit(double amount, String creditCardNumber);
 
-    Flux<CreditDTO> getAllCreditCardByCustomer(String customerId);
+	Mono<Void> deleteCredit(String creditNumber);
 
-    // Product
-    Mono<ProductDTO> getProductByCode(String productId);
+	Flux<CreditDTO> getAllCreditCardByCustomer(String customerId);
 
-    Flux<ProductDTO> getAllProducts();
+	// Product
+	Mono<ProductDTO> getProductByCode(String productId);
 
-    Mono<ProductDTO> createProduct(ProductDTO dto);
+	Flux<ProductDTO> getAllProducts();
 
-    Mono<ProductDTO> updateProduct(ProductDTO dto);
+	Mono<ProductDTO> createProduct(ProductDTO dto);
 
-    Mono<Void> deleteProductByCode(String code);
-    
-    
-    // Wallet
-    Mono<WalletDTO> getWalletByPhoneNumber(String phoneNumber);
-    
-    Mono<WalletDTO> createWallet(WalletDTO dto);
-    
-    Mono<TransactionAtmDTO> makePaymentWallet(TransactionTransferWalletDTO body);
+	Mono<ProductDTO> updateProduct(ProductDTO dto);
+
+	Mono<Void> deleteProductByCode(String code);
+
+	// Wallet
+	Mono<WalletDTO> getWalletByPhoneNumber(String phoneNumber);
+
+	Mono<WalletDTO> createWallet(WalletDTO dto);
+
+	Mono<TransactionAtmDTO> makePaymentWallet(TransactionTransferWalletDTO body);
+
+	// Kafka
+	void associatedWithDebitCard(WalletAssociatedDTO body);
+
 }

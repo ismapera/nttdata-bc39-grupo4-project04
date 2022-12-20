@@ -9,7 +9,9 @@ import com.nttdata.bc39.grupo04.api.exceptions.InvaliteInputException;
 import com.nttdata.bc39.grupo04.api.exceptions.NotFoundException;
 import com.nttdata.bc39.grupo04.api.feign.CreditRestCustomer;
 import com.nttdata.bc39.grupo04.api.utils.Constants;
+import com.nttdata.bc39.grupo04.api.wallet.WalletAssociatedDTO;
 import io.netty.util.internal.StringUtil;
+import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -26,19 +28,35 @@ import java.util.function.Supplier;
 import static com.nttdata.bc39.grupo04.api.utils.Constants.*;
 
 @Service
+@RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository repository;
     private final AccountMapper mapper;
-    private final Logger logger = Logger.getLogger(AccountServiceImpl.class);
-
-    @Autowired
-    public AccountServiceImpl(AccountRepository repository, AccountMapper mapper) {
-        this.repository = repository;
-        this.mapper = mapper;
-    }
+    private final static Logger logger = Logger.getLogger(AccountServiceImpl.class);
 
     @Autowired
     private CreditRestCustomer creditRestCustomer;
+
+    @Override
+    public void associateDebitCardWithWallet(WalletAssociatedDTO walletAssociatedDTO) {
+        Supplier<Flux<AccountEntity>> supplierAccountsAssociatedWithDebitCard = () ->
+                repository.findByDebitCardNumber(walletAssociatedDTO.getDebitCardNumber());
+        logger.debug("AccountServiceImpl::associateDebitCardWithWallet => getDebitCardNumber: " + walletAssociatedDTO.getDebitCardNumber());
+        if (Objects.isNull(supplierAccountsAssociatedWithDebitCard.get().blockFirst())) {
+            logger.debug("Error, no hay ninguna cuenta asociada a la tarjeta nro:"
+                    + walletAssociatedDTO.getDebitCardNumber());
+            throw new InvaliteInputException("Error, no hay ninguna cuenta asociada a la tarjeta nro:"
+                    + walletAssociatedDTO.getDebitCardNumber());
+        }
+        AccountEntity mainAccount = supplierAccountsAssociatedWithDebitCard.get()
+                .sort(Comparator.comparing(AccountEntity::getDebitCardCreationDate)).blockFirst();
+        if (!Objects.isNull(mainAccount)) {
+            logger.debug("Main account associated of debitCard : " + mainAccount);
+            mainAccount.setWalletPhoneNumber(walletAssociatedDTO.getPhoneNumber());
+            mainAccount.setAssociatedWalletDate(new Date());
+            repository.save(mainAccount).block();
+        }
+    }
 
     @Override
     @SuppressWarnings("all")
@@ -130,7 +148,7 @@ public class AccountServiceImpl implements AccountService {
             Supplier<String> generateAccountNumberSupplier = () -> {
                 Date todayDate = new Date();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-                return "1"+sdf.format(todayDate) + System.currentTimeMillis();
+                return "1" + sdf.format(todayDate) + System.currentTimeMillis();
             };
             entity.setAccount(generateAccountNumberSupplier.get());
         }

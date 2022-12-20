@@ -20,7 +20,7 @@ eureka:
 spring.data.mongodb.database: wallet-db
 spring.data.mongodb.host: localhost
 spring.data.mongodb.port: 27017
-spring.data.mongodb.uri: mongodb://localhost/movements-db
+spring.data.mongodb.uri: mongodb://localhost/wallet-db
 spring.autoconfigure.exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 ---
 spring.config.activate.on-profile: docker

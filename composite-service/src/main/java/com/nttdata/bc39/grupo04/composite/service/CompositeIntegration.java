@@ -18,6 +18,8 @@ import com.nttdata.bc39.grupo04.api.resttemplate.RestTemplateImpl;
 import com.nttdata.bc39.grupo04.api.wallet.WalletDTO;
 import com.nttdata.bc39.grupo04.api.wallet.WalletService;
 
+import com.nttdata.bc39.grupo04.api.wallet.WalletAssociatedDTO;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -189,6 +191,11 @@ public class CompositeIntegration implements MovementsService, AccountService,
             logger.warn("Got exception while make CompositeIntegration::createDebitCard " + ex.getMessage());
             throw handleHttpClientException(ex);
         }
+    }
+
+    @Override
+    public void associateDebitCardWithWallet(WalletAssociatedDTO walletAssociatedDTO) {
+        logger.warn("CompositeIntegration :::: associateDebitCardWithWallet: it's method is empty");
     }
 
     @Override

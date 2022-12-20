@@ -15,6 +15,7 @@ public final class Constants {
     public static final String CODE_PRODUCT_CREDITO_EMPRESARIAL = "06";
     public static final String CODE_PRODUCT_PERSONAL_VIP_AHORRO = "07";
     public static final String CODE_PRODUCT_EMPRESA_PYME_CORRIENTE = "08";
+    public static final String CODE_PRODUCT_WALLET = "08";
 
     public static final int MIN_DEPOSIT_AMOUNT = 10;
     public static final int MAX_DEPOSIT_AMOUNT = 5000;
@@ -36,6 +37,11 @@ public final class Constants {
 
     public static final double MIN_AMOUNT_DAILY_AVERAGE = 0;
     public static final double MIN_AMOUNT_MANTENANCE_FEET = 0;
+    
+    public static final int MIN_DEPOSIT_WALLET = 1;
+    public static final int MAX_DEPOSIT_WALLET = 5000;
+    public static final int MIN_WITHDRAWAL_WALLET = 1;
+    public static final int MAX_WITHDRAWAL_WALLET = 5000;
 
 
     public static String getNameProduct(String productId) {
