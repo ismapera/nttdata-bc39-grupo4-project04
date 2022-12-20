@@ -28,6 +28,8 @@ public class AccountEntity {
     private List<SignatoryDTO> signatories;
     private double availableBalance;
     private String debitCardNumber;
+    private String walletPhoneNumber;
+    private Date associatedWalletDate;
     private Date debitCardCreationDate;
     private Date createDate;
     private Date modifyDate;

@@ -20,6 +20,8 @@ public class AccountDTO implements Serializable {
     private List<HolderDTO> holders;
     private List<SignatoryDTO> signatories;
     private String debitCardNumber;
+    private String walletPhoneNumber;
+    private Date associatedWalletDate;
     private Date debitCardCreationDate;
     private double availableBalance;
     private Date createDate;

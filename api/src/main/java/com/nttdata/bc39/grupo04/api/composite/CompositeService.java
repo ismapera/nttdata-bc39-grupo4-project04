@@ -14,6 +14,7 @@ import com.nttdata.bc39.grupo04.api.movements.MovementsReportDTO;
 import com.nttdata.bc39.grupo04.api.product.GeneralReportDTO;
 import com.nttdata.bc39.grupo04.api.product.ProductDTO;
 
+import com.nttdata.bc39.grupo04.api.wallet.WalletAssociatedDTO;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -50,13 +51,13 @@ public interface CompositeService {
     Flux<AvailableAmountDailyDTO> getAvailableAmountDaily(String customerId);
 
     Flux<ComissionReportDTO> getAllComissionByProduct(String fechStart, String fechEnd);
-    
+
     Mono<DebitCardReportDTO> getLastTenDebitCardMovements(String debitCardNumber);
-    
-	Mono<CreditCardReportDTO> getLastTenCreditCardMovements(String debitCardNumber);
-	
-	Mono<ConsolidatedSummaryDTO> getConsolidatedSummary(String customerId);
-	
+
+    Mono<CreditCardReportDTO> getLastTenCreditCardMovements(String debitCardNumber);
+
+    Mono<ConsolidatedSummaryDTO> getConsolidatedSummary(String customerId);
+
     Mono<GeneralReportDTO> getReportGeneral(String fechStart, String fechEnd, String productId);
 
     // Credit
@@ -87,4 +88,7 @@ public interface CompositeService {
     Mono<ProductDTO> updateProduct(ProductDTO dto);
 
     Mono<Void> deleteProductByCode(String code);
+
+    //Kafka
+    void associatedWithDebitCard(WalletAssociatedDTO body);
 }
